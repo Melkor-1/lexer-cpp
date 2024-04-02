@@ -7,10 +7,10 @@
 #include "../token/token.hpp"
 
 class Lexer {
-    std::string_view input;
-    std::size_t pos{};
-    std::size_t read_pos{};
-    char ch;
+    std::string_view input {};
+    std::size_t pos {};
+    std::size_t read_pos {};
+    char ch {};
 
     void read_char();
     char peek_char() const;

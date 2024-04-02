@@ -56,9 +56,8 @@ class Token {
     Token::Type type;
     std::string lit;
 
-    Token(Token::Type type, const std::string_view &lit) : type(type), lit(lit)
-    {
-    }
+    Token(Token::Type type, const std::string_view &lit) 
+        : type {type}, lit {lit} { }
     static Token::Type lookup_ident(const std::string_view &ident);
     static std::string_view to_str(Token::Type t);
 };

@@ -12,7 +12,7 @@ int main()
 
     while (true) {
         std::cout << ">> " << std::flush;
-        std::string input{};
+        std::string input {};
 
         if (!std::getline(std::cin, input)) {
             if (std::cin.bad()) {
@@ -25,9 +25,9 @@ int main()
             break;
         }
 
-        Lexer l{input};
+        Lexer l {input};
 
-        for (Token t{l.next()}; t.type != Token::Type::Eof; t = l.next()) {
+        for (Token t {l.next()}; t.type != Token::Type::Eof; t = l.next()) {
             std::cout << "{Type: " << Token::to_str(t.type)
                       << ", Literal: " << t.lit << "}\n";
         }
