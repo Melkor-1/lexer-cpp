@@ -9,38 +9,38 @@
  * because it doesn't duplicate the names, making it easy to change the
  * enumeration.
  */
-#define FOREACH_TOKEN(_)                                                       \
-    _(Illegal)                                                                 \
-    _(Eof)                                                                     \
-    _(Ident)                                                                   \
-    _(Int)                                                                     \
-    _(String)                                                                  \
-    _(Assign)                                                                  \
-    _(Plus)                                                                    \
-    _(Minus)                                                                   \
-    _(Asterisk)                                                                \
-    _(Slash)                                                                   \
-    _(Bang)                                                                    \
-    _(Lt)                                                                      \
-    _(Gt)                                                                      \
-    _(Eq)                                                                      \
-    _(Not_eq)                                                                  \
-    _(Comma)                                                                   \
-    _(Semicolon)                                                               \
-    _(Colon)                                                                   \
-    _(Lparen)                                                                  \
-    _(Rparen)                                                                  \
-    _(Lbrace)                                                                  \
-    _(Rbrace)                                                                  \
-    _(Lbracket)                                                                \
-    _(Rbracket)                                                                \
-    _(Function)                                                                \
-    _(Let)                                                                     \
-    _(True)                                                                    \
-    _(False)                                                                   \
-    _(If)                                                                      \
-    _(Else)                                                                    \
-    _(Return)
+#define FOREACH_TOKEN(_)    \
+    _(Illegal)              \
+    _(Eof)                  \
+    _(Ident)                \
+    _(Int)                  \
+    _(String)               \
+    _(Assign)               \
+    _(Plus)                 \
+    _(Minus)                \
+    _(Asterisk)             \
+    _(Slash)                \
+    _(Bang)                 \
+    _(Lt)                   \
+    _(Gt)                   \
+    _(Eq)                   \
+    _(Not_eq)               \
+    _(Comma)                \
+    _(Semicolon)            \
+    _(Colon)                \
+    _(Lparen)               \
+    _(Rparen)               \
+    _(Lbrace)               \
+    _(Rbrace)               \
+    _(Lbracket)             \
+    _(Rbracket)             \
+    _(Function)             \
+    _(Let)                  \
+    _(True)                 \
+    _(False)                \
+    _(If)                   \
+    _(Else)                 \
+    _(Return)               \
 
 #define GEN_ENUM(ENUM) ENUM,
 

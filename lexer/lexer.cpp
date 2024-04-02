@@ -11,12 +11,12 @@ void Lexer::read_char()
     pos = read_pos++;
 }
 
-char Lexer::peek_char()
+char Lexer::peek_char() const
 {
     return read_pos >= input.length() ? '\0' : input[read_pos];
 }
 
-bool Lexer::is_letter(char c)
+bool Lexer::is_letter(char c) const
 {
     return c == '_' || std::isalpha(static_cast<unsigned char>(c));
 }

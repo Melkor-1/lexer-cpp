@@ -13,8 +13,8 @@ class Lexer {
     char ch;
 
     void read_char();
-    char peek_char();
-    bool is_letter(char c);
+    char peek_char() const;
+    bool is_letter(char c) const;
     void skip_whitespace();
     std::string_view read_ident();
     std::string_view read_int();
