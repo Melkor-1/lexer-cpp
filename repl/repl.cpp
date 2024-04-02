@@ -2,8 +2,8 @@
 #include <string>
 #include <system_error>
 
-#include "../lexer/lexer.hpp"
-#include "../token/token.hpp"
+#include "../lexer/lexer.h"
+#include "../token/token.h"
 
 int main()
 {

@@ -1,4 +1,4 @@
-#include "lexer.hpp"
+#include "lexer.h"
 
 #include <cctype>
 #include <cstddef>
@@ -76,7 +76,7 @@ Token Lexer::next()
                 return Token {Token::Type::Eq, "=="};
             }
             read_char();
-            return Token (Token::Type::Assign, "="};
+            return Token {Token::Type::Assign, "="};
 
         case '+':
             read_char();

@@ -5,8 +5,8 @@
 #include <string_view>
 #include <vector>
 
-#include "../lexer/lexer.hpp"
-#include "../token/token.hpp"
+#include "../lexer/lexer.h"
+#include "../token/token.h"
 
 static std::size_t tests_run = 0;
 
@@ -15,11 +15,11 @@ static void run_test(const std::string_view &input,
 {
     ++tests_run;
     fprintf(stderr, "[INFO]: Running test suite %zu...\n", tests_run);
-    Lexer l{input};
+    Lexer l {input};
 
-    for (std::size_t i = 0; i < std::size(tests); ++i) {
-        const Token tt = tests[i];
-        const Token t{l.next()};
+    for (std::size_t i {0}; i < std::size(tests); ++i) {
+        const Token tt {tests[i]};
+        const Token t {l.next()};
 
         if (t.type != tt.type) {
             std::cerr << "[FAIL]: tests[" << i + 1 << "] - Token::Type wrong. "
@@ -47,7 +47,7 @@ static void run_test(const std::string_view &input,
 int main()
 {
     /* FIXME: These shouldn't need to be a vector either. */
-    static const std::vector<Token> test_suite1{
+    static const std::vector<Token> test_suite1 {
         {Token::Type::Assign, "="},  {Token::Type::Plus, "+"},
         {Token::Type::Lparen, "("},  {Token::Type::Rparen, ")"},
         {Token::Type::Lbrace, "{"},  {Token::Type::Rbrace, "}"},
@@ -57,7 +57,7 @@ int main()
 
     run_test("=+(){},;#", test_suite1);
 
-    static const std::vector<Token> test_suite2{
+    static const std::vector<Token> test_suite2 {
         {Token::Type::Let, "let"},     {Token::Type::Ident, "five"},
         {Token::Type::Assign, "="},    {Token::Type::Int, "5"},
         {Token::Type::Semicolon, ";"}, {Token::Type::Let, "let"},
@@ -85,7 +85,7 @@ int main()
              "let result = add(five, ten);",
              test_suite2);
 
-    static const std::vector<Token> test_suite3{
+    static const std::vector<Token> test_suite3 {
         {Token::Type::Let, "let"},
         {Token::Type::Ident, "five"},
         {Token::Type::Assign, "="},

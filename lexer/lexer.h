@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <string_view>
 
-#include "../token/token.hpp"
+#include "../token/token.h"
 
 class Lexer {
     std::string_view input {};
