@@ -47,19 +47,19 @@
 class Token {
     // FIXME: This shouldn't be a vector. How do we write an array without
     // providing a size?
-    static const std::vector<std::string_view> token_strs;
-    static int token_strs_count;
+    static const std::vector<std::string_view> token_names;
+    static std::size_t token_count;
 
   public:
     enum class Type { FOREACH_TOKEN(GEN_ENUM) };
 
     Token::Type type;
-    std::string lit;
+    std::string literal;
 
-    Token(Token::Type type, const std::string_view &lit) 
-        : type {type}, lit {lit} { }
+    Token(Token::Type type, const std::string_view &literal) 
+        : type {type}, literal {literal} { }
     static Token::Type lookup_ident(const std::string_view &ident);
-    static std::string_view to_str(Token::Type t);
+    static std::string_view to_string_view(Token::Type token);
 };
 
 #undef GEN_ENUM

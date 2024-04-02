@@ -6,31 +6,30 @@
 
 #define GEN_STRING(STRING) #STRING,
 
-const std::vector<std::string_view> Token::token_strs{
-    FOREACH_TOKEN(GEN_STRING)};
+const std::vector<std::string_view> Token::token_names {
+    FOREACH_TOKEN(GEN_STRING)
+};
 
-int Token::token_strs_count{static_cast<int>(token_strs.size())};
+std::size_t Token::token_count{token_names.size()};
 
 Token::Type Token::lookup_ident(const std::string_view &ident)
 {
-    static const std::unordered_map<std::string_view, Token::Type> kws{
+    static const std::unordered_map<std::string_view, Token::Type> keywords {
         {"fn", Token::Type::Function},   {"let", Token::Type::Let},
         {"true", Token::Type::True},     {"false", Token::Type::False},
         {"if", Token::Type::If},         {"else", Token::Type::Else},
         {"return", Token::Type::Return},
     };
 
-    auto it{kws.find(ident)};
-    return it != kws.end() ? it->second : Token::Type::Ident;
+    auto it {keywords.find(ident)};
+    return it != keywords.end() ? it->second : Token::Type::Ident;
 }
 
-std::string_view Token::to_str(Token::Type t)
+std::string_view Token::to_string_view(Token::Type token)
 {
     // XXX: Is returning "" an okay decision?
-    const int idx{static_cast<int>(t)};
-    return idx < 0 || idx > token_strs_count
-               ? ""
-               : token_strs[static_cast<std::size_t>(idx)];
+    std::size_t index = static_cast<std::size_t> (token);
+    return index < 0 || index > token_count ? "" : token_names[index];
 }
 
 #undef GEN_STRING

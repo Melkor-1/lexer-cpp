@@ -14,28 +14,28 @@ static void run_test(const std::string_view &input,
                      const std::vector<Token> &tests)
 {
     ++tests_run;
-    fprintf(stderr, "[INFO]: Running test suite %zu...\n", tests_run);
-    Lexer l {input};
+    std::cerr << "[INFO]: Running test suite " << tests_run << "...\n";
+    Lexer lexer {input};
 
     for (std::size_t i {0}; i < std::size(tests); ++i) {
-        const Token tt {tests[i]};
-        const Token t {l.next()};
+        const Token expected_token {tests[i]};
+        const Token token {lexer.next()};
 
-        if (t.type != tt.type) {
+        if (token.type != expected_token.type) {
             std::cerr << "[FAIL]: tests[" << i + 1 << "] - Token::Type wrong. "
-                      << "Expected '" << Token::to_str(tt.type) << "'. Got '"
-                      << Token::to_str(t.type) << "'.\n",
+                      << "Expected '" << Token::to_string_view(expected_token.type) << "'. Got '"
+                      << Token::to_string_view(token.type) << "'.\n",
                 std::exit(EXIT_FAILURE);
         }
 
         /* The strncmp() is for illegal tokens; they are non-null terminated,
          * whilst the expected tokens are null-terminated.
          */
-        if (t.lit != tt.lit &&
-            (t.type == Token::Type::Illegal &&
-             strncmp(t.lit.c_str(), tt.lit.c_str(), 1) == 0)) {
+        if (token.literal != expected_token.literal &&
+            (token.type == Token::Type::Illegal &&
+             strncmp(token.literal.c_str(), expected_token.literal.c_str(), 1) == 0)) {
             std::cerr << "[FAIL]: tests[" << i + 1 << "] - Literal wrong. "
-                      << "Expected '" << tt.lit << "'. Got '" << t.lit
+                      << "Expected '" << expected_token.literal << "'. Got '" << token.literal
                       << "'.\n",
                 std::exit(EXIT_FAILURE);
         }

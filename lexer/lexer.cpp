@@ -161,8 +161,8 @@ Token Lexer::next()
                 return Token {Token::Type::Int, read_int()};
             }
 
-            Token t {Token {Token::Type::Illegal, std::string{1, ch}}};
+            Token token {Token {Token::Type::Illegal, std::string{1, ch}}};
             read_char();
-            return t;
+            return token;
     }
 }

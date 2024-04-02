@@ -25,11 +25,11 @@ int main()
             break;
         }
 
-        Lexer l {input};
+        Lexer lexer {input};
 
-        for (Token t {l.next()}; t.type != Token::Type::Eof; t = l.next()) {
-            std::cout << "{Type: " << Token::to_str(t.type)
-                      << ", Literal: " << t.lit << "}\n";
+        for (Token token {lexer.next()}; token.type != Token::Type::Eof; token = lexer.next()) {
+            std::cout << "{Type: " << Token::to_string_view(token.type)
+                      << ", Literal: " << token.literal << "}\n";
         }
     }
 }
