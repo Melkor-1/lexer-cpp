@@ -28,7 +28,9 @@ std::string_view Token::to_str(Token::Type t)
 {
     // XXX: Is returning "" an okay decision?
     const int idx{static_cast<int>(t)};
-    return idx < 0 || idx > token_strs_count ? "" : token_strs[idx];
+    return idx < 0 || idx > token_strs_count
+               ? ""
+               : token_strs[static_cast<std::size_t>(idx)];
 }
 
 #undef GEN_STRING

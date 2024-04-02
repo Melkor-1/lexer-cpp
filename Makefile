@@ -1,4 +1,4 @@
-CXX	:= g++-13
+CXX	:= clang++-18
 
 CXXFLAGS 	+= -std=c++17
 CXXFLAGS 	+= -g3
@@ -15,12 +15,12 @@ CXXFLAGS 	+= -Wconversion
 CXXFLAGS 	+= -Wno-unused-function
 
 BINDIR  	:= bin
-TEST_BINDIR := tests/bin
+TEST_BINDIR := test/bin
 
-SRCDIRS 	:= lexer repl token util
+SRCDIRS 	:= lexer repl token 
 SRCS 		:= $(filter-out repl/repl.cpp, $(wildcard $(addsuffix /*.cpp, $(SRCDIRS))))
 
-TESTDIR 	:= tests
+TESTDIR 	:= test
 TEST_SRCS 	:= $(wildcard $(TESTDIR)/*.cpp)
 
 TARGET 		:= $(BINDIR)/repl

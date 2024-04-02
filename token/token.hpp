@@ -1,6 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H 1
-
+//cas
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -53,9 +54,9 @@ class Token {
     enum class Type { FOREACH_TOKEN(GEN_ENUM) };
 
     Token::Type type;
-    std::string_view lit;
+    std::string lit;
 
-    Token(const std::string_view &lit, Token::Type type) : type(type), lit(lit)
+    Token(Token::Type type, const std::string_view &lit) : type(type), lit(lit)
     {
     }
     static Token::Type lookup_ident(const std::string_view &ident);
