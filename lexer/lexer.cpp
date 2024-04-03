@@ -27,33 +27,34 @@ void Lexer::skip_whitespace()
         ;
 }
 
-std::string_view Lexer::read_ident()
+Token Lexer::read_ident()
 {
     const std::size_t orig_pos {pos};
     for (; is_letter(ch); read_char())
         ;
-    return input.substr(orig_pos, pos - orig_pos);
+    const std::string ident {input.substr(orig_pos, pos - orig_pos)};
+    return Token {Token::lookup_ident(ident), ident};
 }
 
-std::string_view Lexer::read_int()
+Token Lexer::read_int()
 {
     const std::size_t orig_pos {pos};
     for (; isdigit(static_cast<unsigned char>(ch)); read_char())
         ;
-    return input.substr(orig_pos, pos - orig_pos);
+    return Token {Token::Type::Int, input.substr(orig_pos, pos - orig_pos)};
 }
 
-std::string_view Lexer::read_string()
+Token Lexer::read_string()
 {
-    /* Monkey doesn't support escape characters.
-     * XXX: How to signal EOF? Returning an empty string can not be an error.
-     *      Raise an exception?
-     */
+    /* Monkey doesn't support escape characters.  */
     const std::size_t orig_pos {pos + 1};
     do {
         read_char();
     } while (ch != '"' && ch != '\0');
-    return input.substr(orig_pos, pos - orig_pos);
+
+    read_char();
+    return 
+        Token {ch == '\0' ? Token::Type::Illegal : Token::Type::String, input.substr(orig_pos, pos - orig_pos)};
 }
 
 Lexer::Lexer(const std::string_view &input) : input {input} 
@@ -148,17 +149,14 @@ Token Lexer::next()
             return Token {Token::Type::Rbracket, "]"};
 
         case '"': {
-            const std::string_view ident {read_string()};
-            read_char();
-            return Token {Token::Type::String, ident};
+            return read_string();
         }
 
         default:
             if (is_letter(ch)) {
-                const std::string_view ident {read_ident()};
-                return Token {Token::lookup_ident(ident), ident};
+                return read_ident();
             } else if (std::isdigit(static_cast<unsigned char>(ch))) {
-                return Token {Token::Type::Int, read_int()};
+                return read_int();
             }
 
             Token token {Token {Token::Type::Illegal, std::string{1, ch}}};

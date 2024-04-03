@@ -16,9 +16,9 @@ class Lexer {
     char peek_char() const;
     bool is_letter(char c) const;
     void skip_whitespace();
-    std::string_view read_ident();
-    std::string_view read_int();
-    std::string_view read_string();
+    Token read_ident();
+    Token read_int();
+    Token read_string();
 
   public:
     Lexer(const std::string_view &input);
