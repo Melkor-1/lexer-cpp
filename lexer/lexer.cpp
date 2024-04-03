@@ -52,10 +52,13 @@ Token Lexer::read_string()
     do {
         read_char();
     } while (ch != '"' && ch != '\0');
+    
+    if (ch == '\0') {
+        return Token{Token::Type::Illegal, input.substr(orig_pos, pos - orig_pos)};
+    }
 
     read_char();
-    return Token{ch == '\0' ? Token::Type::Illegal : Token::Type::String,
-                 input.substr(orig_pos, pos - orig_pos)};
+    return Token{Token::Type::String, input.substr(orig_pos, pos - orig_pos - 1)};
 }
 
 Lexer::Lexer(const std::string_view &input) : input{input} { read_char(); }
