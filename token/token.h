@@ -1,6 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H 1
 
+#include <array>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -42,16 +43,20 @@
     _(Else)                 \
     _(Return)               \
 
-#define GEN_ENUM(ENUM) ENUM,
-
 class Token {
-    // FIXME: This shouldn't be a vector. How do we write an array without
-    // providing a size?
-    static const std::vector<std::string_view> token_names;
-    static std::size_t token_count;
+    static constexpr std::array token_names {
+        #define GEN_STRING_COMMA(STRING) #STRING,
+        FOREACH_TOKEN(GEN_STRING_COMMA)
+        #undef GEN_STRING_COMMA
+    };
+    static constexpr std::size_t token_count {token_names.size()};
 
   public:
-    enum class Type { FOREACH_TOKEN(GEN_ENUM) };
+    enum class Type {
+        #define GEN_ENUM_COMMA(ENUM) ENUM,
+        FOREACH_TOKEN(GEN_ENUM_COMMA) 
+        #undef GEN_ENUM_COMMA
+    };
 
     Token::Type type;
     std::string literal;
@@ -62,6 +67,6 @@ class Token {
     static std::string_view to_string_view(Token::Type token);
 };
 
-#undef GEN_ENUM
+#undef FOREACH_TOKEN
 
 #endif /* TOKEN_H */

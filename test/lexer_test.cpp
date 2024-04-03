@@ -1,3 +1,4 @@
+#include <array>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -46,7 +47,6 @@ static void run_test(const std::string_view &input,
 
 int main()
 {
-    /* FIXME: These shouldn't need to be a vector either. */
     static const std::vector<Token> test_suite1 {
         {Token::Type::Assign, "="},  {Token::Type::Plus, "+"},
         {Token::Type::Lparen, "("},  {Token::Type::Rparen, ")"},
