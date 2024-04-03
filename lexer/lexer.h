@@ -1,5 +1,5 @@
-#ifndef LEXER_HPP
-#define LEXER_HPP 1
+#ifndef LEXER_H
+#define LEXER_H 1
 
 #include <cstddef>
 #include <string_view>
@@ -7,10 +7,10 @@
 #include "../token/token.h"
 
 class Lexer {
-    std::string_view input {};
-    std::size_t pos {};
-    std::size_t read_pos {};
-    char ch {};
+    std::string_view input{};
+    std::size_t pos{};
+    std::size_t read_pos{};
+    char ch{};
 
     void read_char();
     char peek_char() const;
@@ -25,4 +25,4 @@ class Lexer {
     Token next();
 };
 
-#endif /* LEXER_HPP */
+#endif /* LEXER_H */

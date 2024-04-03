@@ -16,16 +16,18 @@ static void run_test(const std::string_view &input,
 {
     ++tests_run;
     std::cerr << "[INFO]: Running test suite " << tests_run << "...\n";
-    Lexer lexer {input};
+    Lexer lexer{input};
 
-    for (std::size_t i {0}; i < std::size(tests); ++i) {
-        const Token expected_token {tests[i]};
-        const Token token {lexer.next()};
+    for (std::size_t i{0}; i < std::size(tests); ++i) {
+        const Token expected_token{tests[i]};
+        const Token token{lexer.next()};
 
         if (token.type != expected_token.type) {
             std::cerr << "[FAIL]: tests[" << i + 1 << "] - Token::Type wrong. "
-                      << "Expected '" << Token::to_string_view(expected_token.type) << "'. Got '"
-                      << Token::to_string_view(token.type) << "'.\n",
+                      << "Expected '"
+                      << Token::to_string_view(expected_token.type)
+                      << "'. Got '" << Token::to_string_view(token.type)
+                      << "'.\n",
                 std::exit(EXIT_FAILURE);
         }
 
@@ -34,10 +36,11 @@ static void run_test(const std::string_view &input,
          */
         if (token.literal != expected_token.literal &&
             (token.type == Token::Type::Illegal &&
-             strncmp(token.literal.c_str(), expected_token.literal.c_str(), 1) == 0)) {
+             strncmp(token.literal.c_str(), expected_token.literal.c_str(),
+                     1) == 0)) {
             std::cerr << "[FAIL]: tests[" << i + 1 << "] - Literal wrong. "
-                      << "Expected '" << expected_token.literal << "'. Got '" << token.literal
-                      << "'.\n",
+                      << "Expected '" << expected_token.literal << "'. Got '"
+                      << token.literal << "'.\n",
                 std::exit(EXIT_FAILURE);
         }
     }
@@ -47,7 +50,7 @@ static void run_test(const std::string_view &input,
 
 int main()
 {
-    static const std::vector<Token> test_suite1 {
+    static const std::vector<Token> test_suite1{
         {Token::Type::Assign, "="},  {Token::Type::Plus, "+"},
         {Token::Type::Lparen, "("},  {Token::Type::Rparen, ")"},
         {Token::Type::Lbrace, "{"},  {Token::Type::Rbrace, "}"},
@@ -57,7 +60,7 @@ int main()
 
     run_test("=+(){},;#", test_suite1);
 
-    static const std::vector<Token> test_suite2 {
+    static const std::vector<Token> test_suite2{
         {Token::Type::Let, "let"},     {Token::Type::Ident, "five"},
         {Token::Type::Assign, "="},    {Token::Type::Int, "5"},
         {Token::Type::Semicolon, ";"}, {Token::Type::Let, "let"},
@@ -85,7 +88,7 @@ int main()
              "let result = add(five, ten);",
              test_suite2);
 
-    static const std::vector<Token> test_suite3 {
+    static const std::vector<Token> test_suite3{
         {Token::Type::Let, "let"},
         {Token::Type::Ident, "five"},
         {Token::Type::Assign, "="},

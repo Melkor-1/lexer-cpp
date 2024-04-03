@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 
 void Lexer::read_char()
 {
@@ -29,138 +30,88 @@ void Lexer::skip_whitespace()
 
 Token Lexer::read_ident()
 {
-    const std::size_t orig_pos {pos};
+    const std::size_t orig_pos{pos};
     for (; is_letter(ch); read_char())
         ;
-    const std::string ident {input.substr(orig_pos, pos - orig_pos)};
-    return Token {Token::lookup_ident(ident), ident};
+    const std::string ident{input.substr(orig_pos, pos - orig_pos)};
+    return Token{Token::lookup_ident(ident), ident};
 }
 
 Token Lexer::read_int()
 {
-    const std::size_t orig_pos {pos};
+    const std::size_t orig_pos{pos};
     for (; isdigit(static_cast<unsigned char>(ch)); read_char())
         ;
-    return Token {Token::Type::Int, input.substr(orig_pos, pos - orig_pos)};
+    return Token{Token::Type::Int, input.substr(orig_pos, pos - orig_pos)};
 }
 
 Token Lexer::read_string()
 {
     /* Monkey doesn't support escape characters.  */
-    const std::size_t orig_pos {pos + 1};
+    const std::size_t orig_pos{pos + 1};
     do {
         read_char();
     } while (ch != '"' && ch != '\0');
 
     read_char();
-    return 
-        Token {ch == '\0' ? Token::Type::Illegal : Token::Type::String, input.substr(orig_pos, pos - orig_pos)};
+    return Token{ch == '\0' ? Token::Type::Illegal : Token::Type::String,
+                 input.substr(orig_pos, pos - orig_pos)};
 }
 
-Lexer::Lexer(const std::string_view &input) : input {input} 
-{ 
-    read_char(); 
-}
+Lexer::Lexer(const std::string_view &input) : input{input} { read_char(); }
 
 Token Lexer::next()
 {
     skip_whitespace();
 
-    switch (ch) {
-        case '\0':
-            return Token {Token::Type::Eof, ""};
+    /* For '==' && '!=', call read_char() twice before returning.
+     * For is_letter and isdigit, do not call read_char().
+     * For '"', call read_char() once.
+     * For an illegal token, call read_char() once after instantiating the Token
+     * object.
+     * For the rest of the tokens, call read_char() once.
+     */
+    static std::unordered_map<std::string_view, Token::Type> token_map{
+        {"=", Token::Type::Assign},   {"+", Token::Type::Plus},
+        {"-", Token::Type::Minus},    {"!", Token::Type::Bang},
+        {"*", Token::Type::Asterisk}, {"*", Token::Type::Asterisk},
+        {"/", Token::Type::Slash},    {"<", Token::Type::Lt},
+        {">", Token::Type::Gt},       {",", Token::Type::Comma},
+        {":", Token::Type::Colon},    {";", Token::Type::Semicolon},
+        {"(", Token::Type::Lparen},   {")", Token::Type::Rparen},
+        {"{", Token::Type::Lbrace},   {"}", Token::Type::Rbrace},
+        {"[", Token::Type::Lbracket}, {"]", Token::Type::Rbracket},
+        {"\"", Token::Type::String},
+    };
 
-        case '=':
-            if (peek_char() == '=') {
-                read_char();
-                read_char();
-                return Token {Token::Type::Eq, "=="};
-            }
+    if (is_letter(ch)) {
+        return read_ident();
+    } else if (std::isdigit(static_cast<unsigned char>(ch))) {
+        return read_int();
+    }
+
+    if (const auto it{token_map.find(std::string_view{&ch, 1})};
+        it != token_map.end()) {
+        if (ch == '=' && peek_char() == '=') {
             read_char();
-            return Token {Token::Type::Assign, "="};
-
-        case '+':
             read_char();
-            return Token {Token::Type::Plus, "+"};
-
-        case '-':
+            return Token{Token::Type::Eq, "=="};
+        } else if (ch == '!' && peek_char() == '=') {
             read_char();
-            return Token {Token::Type::Minus, "-"};
-
-        case '!':
-            if (peek_char() == '=') {
-                read_char();
-                read_char();
-                return Token {Token::Type::Not_eq, "!="};
-            }
             read_char();
-            return Token {Token::Type::Bang, "!"};
-
-        case '*':
-            read_char();
-            return Token {Token::Type::Asterisk, "*"};
-
-        case '/':
-            read_char();
-            return Token {Token::Type::Slash, "/"};
-
-        case '<':
-            read_char();
-            return Token {Token::Type::Lt, "<"};
-
-        case '>':
-            read_char();
-            return Token {Token::Type::Gt, ">"};
-
-        case ',':
-            read_char();
-            return Token {Token::Type::Comma, ","};
-
-        case ';':
-            read_char();
-            return Token {Token::Type::Semicolon, ";"};
-
-        case ':':
-            read_char();
-            return Token {Token::Type::Colon, ":"};
-
-        case '(':
-            read_char();
-            return Token {Token::Type::Lparen, "("};
-
-        case ')':
-            read_char();
-            return Token{Token::Type::Rparen, ")"};
-
-        case '{':
-            read_char();
-            return Token {Token::Type::Lbrace, "{"};
-
-        case '}':
-            read_char();
-            return Token {Token::Type::Rbrace, "}"};
-
-        case '[':
-            read_char();
-            return Token {Token::Type::Lbracket, "["};
-
-        case ']':
-            read_char();
-            return Token {Token::Type::Rbracket, "]"};
-
-        case '"': {
+            return Token{Token::Type::Not_eq, "!="};
+        } else if (ch == '"') {
             return read_string();
         }
-
-        default:
-            if (is_letter(ch)) {
-                return read_ident();
-            } else if (std::isdigit(static_cast<unsigned char>(ch))) {
-                return read_int();
-            }
-
-            Token token {Token {Token::Type::Illegal, std::string{1, ch}}};
-            read_char();
-            return token;
+        read_char();
+        return Token{it->second, it->first};
     }
+
+    if (ch == '\0') {
+        return Token{Token::Type::Eof, ""};
+    }
+
+    Token token{Token{Token::Type::Illegal, std::string{1, ch}}};
+    read_char();
+    return token;
 }
